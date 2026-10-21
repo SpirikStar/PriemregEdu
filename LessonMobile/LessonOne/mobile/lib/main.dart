@@ -39,6 +39,9 @@ class MyApp extends StatelessWidget {
                   width: 200,
                   height: 100,
                   fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  color: const Color.fromARGB(141, 127, 16, 255),
+                  colorBlendMode: BlendMode.darken,
                 ),
               ]
             ),
