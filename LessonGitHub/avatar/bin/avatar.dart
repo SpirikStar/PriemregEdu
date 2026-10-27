@@ -8,7 +8,7 @@ void main() async {
   await lib.createDir(baseAssets: dir);
   var images = await lib.getImages(dir: dir);
   var client = HttpClient();
-  for (var index = 1; index < 5; index++) {
+  for (var index = 1; index < 10; index++) {
     if (await lib.isImage(index: index, images: images)){
       continue;
     }
