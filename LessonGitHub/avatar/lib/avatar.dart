@@ -11,6 +11,20 @@ Future<void> createDir({required Directory baseAssets}) async {
   baseAssets.create(recursive: true);
 }
 
+Future<bool> isImage({required int index, required List images}) async {
+  return images.contains('$index.jpeg');
+}
+Future<List> getImages({required Directory dir}) async {
+  var images = [];
+  try{
+    await for (var entity in dir.list()) {
+      images.add(entity.path.split('/')[2]);
+    }
+  }
+  catch(ex){ print(ex);}
+  return images;
+}
+
 Future<void> downloadImage({
   int index = 1,
   required HttpClientResponse response,
@@ -18,8 +32,6 @@ Future<void> downloadImage({
 }) async {
   var file = File("$path/$index.jpeg");
   await response.pipe(file.openWrite());
-  // TODO: Все объекты необходимо переместить в папку lib
-  // TODO: Если изображение ранее было скачено - не скачивать его.
 }
 
 Future<HttpClientResponse> getResponse({
