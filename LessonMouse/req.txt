@@ -1,0 +1,10 @@
+click==8.5.0
+pillow==13.0.0
+pur==7.4.0
+pynput==1.8.2
+pyobjc-core==13.0
+pyobjc-framework-ApplicationServices==13.0
+pyobjc-framework-Cocoa==13.0
+pyobjc-framework-CoreText==13.0
+pyobjc-framework-Quartz==13.0
+six==1.17.0
