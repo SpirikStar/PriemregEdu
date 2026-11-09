@@ -1,8 +1,7 @@
 from pynput import mouse
-from PIL import ImageGrab # ! Убарть импорт
-import time
 import mss
 import mss.tools
+import time
 
 class MouseWindow:
     def __init__(self):
@@ -10,25 +9,21 @@ class MouseWindow:
         self.sct = mss.mss()
 
     def on_click(self, x, y, button, pressed):
-        if not pressed:
-            return
-        if button != mouse.Button.left:
+        if not pressed or button != mouse.Button.left:
             return
 
-        # TODO: Заменить ImageGrab на self.sct.grab({"left": .., "top": .., "right": .., "bottom": ..})
-        screennshot = ImageGrab.grab(all_screens=True)
-        left = max(0, x - self.crop_size // 2)
-        top = max(0, y - self.crop_size // 2)
+        half = self.crop_size // 2
+        region = {
+            "left": x - half,
+            "top": y - half,
+            "width": self.crop_size,
+            "height": self.crop_size
+        }
 
-        right = min(screennshot.width, x + self.crop_size // 2)
-        bottom = min(screennshot.height, y + self.crop_size // 2)
+        screenshot = self.sct.grab(region)
         
-        # TODO: Убарать crop
-        cropped = screennshot.crop((left, top, right, bottom))
-
-        # TODO mss.tools - отвечает за сохранение  mss.tools.to_png()
-        cropped.save(f'screen/{time.time()}-{x}-{y}.png')
-
+        filename = f'screen/{time.time()}-{x}-{y}.png'
+        mss.tools.to_png(screenshot.rgb, screenshot.size, output=filename)
 
 window = MouseWindow()
 with mouse.Listener(on_click=window.on_click) as listener:
