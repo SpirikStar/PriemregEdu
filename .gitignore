@@ -1,3 +1,6 @@
 .venv
 
-screen
+tmp
+
+
+base.db
