@@ -14,13 +14,33 @@ class MouseWindow:
         self.sct = mss.mss()
         self.engine = RapidOCR()
         self.__db_path = self.format_path('base.db')
-        self.__connect = sqlite3.connect(self.__db_path)
-        self.__cursor = self.__connect.cursor()
+
+        self.__create_table()
 
         os.makedirs(self.format_path('tmp'), exist_ok=True)
 
     def __get_pwd(self) -> Path:
         return Path(__file__).resolve().parent
+
+    def __connect_db(self):
+        connect = sqlite3.connect(self.__db_path)
+        return connect, connect.cursor()
+
+    def __custom_execute(self, sql: str, parameters: tuple = ()):
+        connect, cursor = self.__connect_db()
+        cursor.execute(sql, parameters)
+        if 'CREATE TABLE' not in sql:
+            connect.commit()
+        connect.close()
+
+    def __create_table(self):
+        self.__custom_execute('''
+            CREATE TABLE IF NOT EXISTS screens (
+                image BLOB NOT NULL,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+            )
+        ''')
 
     def format_path(self, name) -> str:
         return self.__get_pwd() / name
@@ -48,8 +68,13 @@ class MouseWindow:
 
         url = self.format_path(f'tmp/{time.time()}-{x}-{y}.png')
         mss.tools.to_png(screenshot.rgb, screenshot.size, output=url)
-        res = self.recognize(path=url)
-        print(res)
+        res_recognize = self.recognize(path=url)
+        with open(url, 'rb') as file:
+            image_byte = file.read()
+        self.__custom_execute(
+            'INSERT INTO screens (image, content) VALUES (?, ?)',
+            (sqlite3.Binary(image_byte), res_recognize)
+        )
 
 
 window = MouseWindow()
