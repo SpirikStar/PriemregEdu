@@ -27,6 +27,7 @@ class MouseWindow:
         return connect, connect.cursor()
 
     def __custom_execute(self, sql: str, parameters: tuple = ()):
+        # TODO: Выявить возможные проблемы и устранить
         connect, cursor = self.__connect_db()
         cursor.execute(sql, parameters)
         if 'CREATE TABLE' not in sql:
@@ -53,6 +54,7 @@ class MouseWindow:
         return '\n'.join([line[1] for line in result])
 
     def on_click(self, x, y, button, pressed):
+        # TODO: Содержимое функции разбить на отдельные методы
         if not pressed or button != mouse.Button.left:
             return
 
@@ -67,16 +69,20 @@ class MouseWindow:
         screenshot = self.sct.grab(region)
 
         url = self.format_path(f'tmp/{time.time()}-{x}-{y}.png')
+        #TODO: Сжать максимально изображение (level 9, максималка). Но необходимо проанализировать, не повлияет ли это на качество распознавания.
         mss.tools.to_png(screenshot.rgb, screenshot.size, output=url)
         res_recognize = self.recognize(path=url)
         with open(url, 'rb') as file:
             image_byte = file.read()
+        #TODO: После сохранения в БД необходимо удалять фото из tmp
         self.__custom_execute(
             'INSERT INTO screens (image, content) VALUES (?, ?)',
             (sqlite3.Binary(image_byte), res_recognize)
         )
 
 
+#TODO: Ускорить, проверить на легаси, попробовать перевести распознавание в потоки.
+#TODO: Сделать рефакторинг кода
 window = MouseWindow()
 with mouse.Listener(on_click=window.on_click) as listener:
     listener.join()
