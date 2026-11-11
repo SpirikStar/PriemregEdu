@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mobile/screens/login.dart';
+import 'package:mobile/services/auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +23,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: const Color.fromRGBO(88, 88, 246, 1)),
       ),
-      home: Login(), // ! Добавить проверку на существующие сессии
+      home: Login(auth: _auth), // ! Добавить проверку на существующие сессии
     );
   }
 }

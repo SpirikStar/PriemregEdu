@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/auth.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
-
+  const Login({super.key, required this.auth});
+  final AuthService auth;
   @override
   State<Login> createState() => _LoginState();
 }
@@ -10,7 +11,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
-  String? _error; // TODO: Все ошибки сюда и отображать
+  String? _error;
 
   @override
   void dispose() {
@@ -19,8 +20,14 @@ class _LoginState extends State<Login> {
   }
 
   void _submit() {
-    
+    setState(
+      () => _error = widget.auth.login(
+        _loginController.text,
+        _passwordController.text,
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +54,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(height: 16),
+            if (_error != null) ...[Text(_error!)],
             FilledButton(child: const Text('Войти'), onPressed: _submit),
           ],
         ),
