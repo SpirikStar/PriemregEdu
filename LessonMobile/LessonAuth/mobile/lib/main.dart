@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: const Color.fromRGBO(88, 88, 246, 1)),
       ),
-      home: Login(),
+      home: Login(), // ! Добавить проверку на существующие сессии
     );
   }
 }
