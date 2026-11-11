@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/screens/home.dart';
 
 import 'package:mobile/screens/login.dart';
 import 'package:mobile/services/auth.dart';
@@ -23,7 +24,21 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: const Color.fromRGBO(88, 88, 246, 1)),
       ),
-      home: Login(auth: _auth), // ! Добавить проверку на существующие сессии
+      home: ListenableBuilder(
+        listenable: _auth,
+        builder: (context, _) {
+          final user = _auth.currentUser;
+          if (user == null) {
+            return Login(auth: _auth);
+          }
+          return Home(auth: _auth, user: user);
+        },
+      ),
     );
   }
 }
+// TODO: Для пароля добавить "Скрыто".
+// TODO: Реализовать кнопку "Выйти из ЛК"
+// TODO: В ЛК добавить приветствие 
+// TODO: Кнопку "Войти" сделать ширину как input
+// TODO: BorderRadius сделать единым для всех

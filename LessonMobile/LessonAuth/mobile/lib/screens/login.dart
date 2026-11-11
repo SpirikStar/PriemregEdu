@@ -53,8 +53,14 @@ class _LoginState extends State<Login> {
                 border: OutlineInputBorder(),
               ),
             ),
+            if (_error != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ],
             const SizedBox(height: 16),
-            if (_error != null) ...[Text(_error!)],
             FilledButton(child: const Text('Войти'), onPressed: _submit),
           ],
         ),
