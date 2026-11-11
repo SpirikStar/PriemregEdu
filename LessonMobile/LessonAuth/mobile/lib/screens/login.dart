@@ -10,6 +10,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  String? _error; // TODO: Все ошибки сюда и отображать
 
   @override
   void dispose() {
@@ -17,7 +18,9 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
   }
 
-  void _submit() {}
+  void _submit() {
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
